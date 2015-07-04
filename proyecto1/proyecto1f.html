@@ -13,17 +13,19 @@
 		<script src="lib.js"></script>
 		<script>	
 		
-		 /// comentarioooo
+		 /// variables principales
 			var scene = new THREE.Scene();
 			
 			var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 			
 			var renderer = new THREE.WebGLRenderer();
+
 			//render
 			renderer.setClearColorHex(0xEEEEEE);
 			renderer.setSize(window.innerWidth, window.innerHeight);
 			document.body.appendChild(renderer.domElement);
 			renderer.shadowMapEnabled = true;
+
 			//plano
 			var planeGeom = new THREE.PlaneGeometry(60, 60, 1, 1);
 			var planeMat = new THREE.MeshLambertMaterial({color: 0xFFFFFF});
@@ -35,52 +37,34 @@
 			plane.position.z=0
 			scene.add(plane);
 			
-			//Crear un cubo de dimension 4x4x4 y agregarlo en el plano en la posicion (30,3,-15)
+			//se crea un cubo
 			var cubeGeom = new THREE.CubeGeometry(4, 4, 4);
 			var cubeMat = new THREE.MeshLambertMaterial({color: 0xFF0000});
 			var cube = new THREE.Mesh(cubeGeom, cubeMat);
 			cube.castShadow = true;
-			cube.position.x=30;
-			cube.position.y=3;
-			cube.position.z=-15;
-			
 			scene.add(cube);
 			
-			//Crear una esfera de radio=4 y segmentos horizontales/verticales=20
-			//Se agrego la esfera en el plano en la posicion (20,0,2)
+			//se cre la esfera
 			var sphereGeom = new THREE.SphereGeometry(4, 20, 20);
 			var sphereMat = new THREE.MeshLambertMaterial({color: 0x0000ff});
 			var sphere = new THREE.Mesh(sphereGeom, sphereMat);
 			sphere.castShadow = true;
-			sphere.position.x=20;
-			sphere.position.y=0;
-			sphere.position.z=2;
 			scene.add(sphere);
 			
-			//Se utilizo CylinderGeometry para armar la piramide utilizando sus 5 parametros, ya que una piramide es un subtipo de un cilindro.
-			//Se creo un cilindro con radio superior en 0 para darle la forma de cono, radio inferior 5 y altura 10.
-			//Numero de caras o segmentos = 4, para darle las cuatro caras caracteristicas de una piramide, y el ultimo parametro en 0 para crear la
-			//cara inferior.
-			//Se posiciono la piramide en (-15,5,-30) en el plano.
+
+			//se crea la piramide
 			var pyrGeom = new THREE.CylinderGeometry( 0, 5, 10, 4, 0);
 			var pyrMat = new THREE.MeshLambertMaterial({color: 0x00ff00});
 			var pyr = new THREE.Mesh(pyrGeom, pyrMat);
 			pyr.castShadow = true;
-			pyr.position.x=-15;
-			pyr.position.y=5;
-			pyr.position.z=-30;
 			scene.add(pyr);
 			
-			//Se creo un toroide de radio 4, radio de tubo 2, 30 segmentos radiales y 50 segmentos del tubo.
-			//Se posiciono el toroide en (7,5,20) en el plano con un factor de rotacion de 1/2(pi)
+
+			//creacion de toroide
 			var toroGeom = new THREE.TorusGeometry(4, 2, 30, 50);
 			var toroMat = new THREE.MeshLambertMaterial({color: 0x00ffff});
 			var toro = new THREE.Mesh(toroGeom, toroMat);
 			toro.castShadow = true;
-			toro.position.x=7;
-			toro.position.y=5;
-			toro.position.z=20;
-			toro.rotation.x=0.5*Math.PI;
 			scene.add(toro);
 			
 			//camara
@@ -98,10 +82,6 @@
 			spotLight.castShadow = true;
 			scene.add(spotLight);
 			
-			var step=0;
-			
-			//radius = sphereGeom.radius;
-			var scale = 0; // adjust the multiplier to whatever
 			
 			//controles
 			var controls = new function() {
@@ -146,7 +126,9 @@
 			var render =function() {
 
 				//////     funciones del cubo       ///////
-				cube.position.y = 5;
+				cube.position.y = 6;
+				cube.position.x = 25;
+				cube.position.z = -16;
 
 				//rotacion del cubo
 				if (controls.axisSelectCube == 1){
@@ -186,7 +168,7 @@
 				//posicion de la piramide en el plano
 				pyr.position.x = 5;
 				pyr.position.z = 15;
-				//pyr.position.y = 15;
+				pyr.position.y = 8;
 
 				// escalamiento de la esfera 
 				pyr.scale.x = controls.sacalePyr;
@@ -211,7 +193,7 @@
 				//posicion del toroide en el plano
 				toro.position.x = 0;
 				toro.position.z = -15;
-				toro.position.y = 4;
+				toro.position.y = 8;
 
 				// escalamiento del toroide 
 				/*toro.scale.x = controls.sacaleTor;
