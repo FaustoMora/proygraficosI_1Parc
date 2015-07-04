@@ -38,7 +38,7 @@
 			scene.add(plane);
 			
 			//se crea un cubo
-			var cubeGeom = new THREE.CubeGeometry(4, 4, 4);
+			var cubeGeom = new THREE.CubeGeometry(8, 8, 8);
 			var cubeMat = new THREE.MeshLambertMaterial({color: 0xFF0000});
 			var cube = new THREE.Mesh(cubeGeom, cubeMat);
 			cube.castShadow = true;
@@ -97,30 +97,46 @@
 				this.rotationSpeedPyr = 0.02;
 				this.rotationSpeedTor = 0.01;
 				this.rotationSpeedSphe = 0.02;
+				this.traslationSpheX = 0.01;
+				this.traslationSpheZ = 0.01;
+				this.traslationCubeX = 0.01;
+				this.traslationCubeZ = 0.01;
+				this.traslationPyrX = 0.01;
+				this.traslationPyrZ = 0.01;
+				this.traslationTorX = 0.01;
+				this.traslationTorZ = 0.01;
 			}
 
 			var gui = new dat.GUI();
 			
 			//Se crearon carpetas para separar los controles de la esfera, cubo, piramide y toroide con el fin de mejorar la presentacion.
-			var f1Sphere = gui.addFolder('Sphere');
-			f1Sphere.add(controls, 'axisSelectSphe').options({'X Axis': 1, 'Y Axis': 2, 'Z Axis': 3});
-			f1Sphere.add(controls, 'rotationSpeedSphe',0,0.5);
-			f1Sphere.add(controls, 'scaleSphe',0.1,1);
+			var Sphere = gui.addFolder('Sphere');
+			Sphere.add(controls, 'axisSelectSphe').options({'X Axis': 1, 'Y Axis': 2, 'Z Axis': 3});
+			Sphere.add(controls, 'rotationSpeedSphe',0,0.5);
+			Sphere.add(controls, 'scaleSphe',0.1,1);
+			Sphere.add(controls, 'traslationSpheX',0.1,10);
+			Sphere.add(controls, 'traslationSpheZ',0.1,10);
 
-			var f2Cube = gui.addFolder('Cube');
-			f2Cube.add(controls, 'axisSelectCube').options({'X Axis': 1, 'Y Axis': 2, 'Z Axis': 3});
-			f2Cube.add(controls, 'rotationSpeedCube',0,0.5);
-			f2Cube.add(controls, 'scaleCube', 0.1,2);
+			var Cube = gui.addFolder('Cube');
+			Cube.add(controls, 'axisSelectCube').options({'X Axis': 1, 'Y Axis': 2, 'Z Axis': 3});
+			Cube.add(controls, 'rotationSpeedCube',0,0.5);
+			Cube.add(controls, 'scaleCube', 0.1,2);
+			Cube.add(controls, 'traslationCubeX',0.1,15);
+			Cube.add(controls, 'traslationCubeZ',0.1,15);
 
-			var f3Toro = gui.addFolder('Toroid');
-			f3Toro.add(controls, 'axisSelectTor').options({'X Axis': 1, 'Y Axis': 2});
-			f3Toro.add(controls, 'rotationSpeedTor',0,0.5);
-			f3Toro.add(controls, 'scaleTor', 0.1,2);
+			var Toro = gui.addFolder('Toroid');
+			Toro.add(controls, 'axisSelectTor').options({'X Axis': 1, 'Y Axis': 2});
+			Toro.add(controls, 'rotationSpeedTor',0,0.5);
+			Toro.add(controls, 'scaleTor', 0.1,2);
+			Toro.add(controls, 'traslationTorX',0.1,10);
+			Toro.add(controls, 'traslationTorZ',0.1,10);
 
-			var f4Pyr = gui.addFolder('Pyramid');
-			f4Pyr.add(controls, 'axisSelectPyr').options({'X Axis': 1, 'Y Axis': 2, 'Z Axis': 3});
-			f4Pyr.add(controls, 'rotationSpeedPyr',0,0.5);
-			f4Pyr.add(controls, 'sacalePyr', 0.1,1.5);
+			var Pyr = gui.addFolder('Pyramid');
+			Pyr.add(controls, 'axisSelectPyr').options({'X Axis': 1, 'Y Axis': 2, 'Z Axis': 3});
+			Pyr.add(controls, 'rotationSpeedPyr',0,0.5);
+			Pyr.add(controls, 'sacalePyr', 0.1,1.5);
+			Pyr.add(controls, 'traslationPyrX',0.1,15);
+			Pyr.add(controls, 'traslationPyrZ',0.1,15);
 			
 			//funcion render
 			var render =function() {
@@ -129,6 +145,7 @@
 				cube.position.y = 6;
 				cube.position.x = 25;
 				cube.position.z = -16;
+
 
 				//rotacion del cubo
 				if (controls.axisSelectCube == 1){
@@ -144,6 +161,10 @@
 				cube.scale.y = controls.scaleCube;
 				cube.scale.z = controls.scaleCube;
 
+				// posicion de mov del cubo
+				cube.position.x += controls.traslationCubeX;
+				cube.position.z += controls.traslationCubeZ;
+
 
 				/// end cubo 
 
@@ -151,14 +172,20 @@
 				//////     funciones de la esfera       ///////
 
 				//posicion de la esfera en el plano
-				sphere.position.x = 25;
-				sphere.position.z = 15;
+				sphere.position.x = 15;
+				sphere.position.z = 10;
 				sphere.position.y = 10;
+
 
 				// escalamiento de la esfera 
 				sphere.scale.x = controls.scaleSphe;
 				sphere.scale.y = controls.scaleSphe;
 				sphere.scale.z = controls.scaleSphe;
+
+
+				// posicion de mov de la esfera
+				sphere.position.x += controls.traslationSpheX;
+				sphere.position.z += controls.traslationSpheZ;
 
 				/// end esfera
 
@@ -166,14 +193,10 @@
 				//////     funciones de la piramide       ///////
 				
 				//posicion de la piramide en el plano
-				pyr.position.x = 5;
+				pyr.position.x = -5;
 				pyr.position.z = 15;
 				pyr.position.y = 8;
 
-				// escalamiento de la esfera 
-				pyr.scale.x = controls.sacalePyr;
-				pyr.scale.y = controls.sacalePyr;
-				pyr.scale.z = controls.sacalePyr;
 
 				// rotacion de la piramide
 				if (controls.axisSelectPyr == 1){
@@ -185,6 +208,16 @@
 				}
 
 
+				// escalamiento de la esfera 
+				pyr.scale.x = controls.sacalePyr;
+				pyr.scale.y = controls.sacalePyr;
+				pyr.scale.z = controls.sacalePyr;
+
+
+				// posicion de mov de la piramide
+				pyr.position.x += controls.traslationPyrX;
+				pyr.position.z += controls.traslationPyrZ;
+
 				/// end esfera
 
 
@@ -195,10 +228,6 @@
 				toro.position.z = -15;
 				toro.position.y = 8;
 
-				// escalamiento del toroide 
-				/*toro.scale.x = controls.sacaleTor;
-				toro.scale.y = controls.sacaleTor;
-				toro.scale.z = controls.sacaleTor;*/
 
 				// rotacion del toroide
 				if (controls.axisSelectTor == 1){
@@ -208,6 +237,10 @@
 				} else if(controls.axisSelectTor == 3){
 					toro.rotation.z += controls.rotationSpeedTor*Math.PI;
 				}
+
+				// posicion de mov del toroide
+				toro.position.x += controls.traslationTorX;
+				toro.position.z += controls.traslationTorZ;
 
 
 				/// end toroide
