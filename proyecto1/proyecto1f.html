@@ -8,6 +8,14 @@
 				
 	</head>
 	<body>
+<!-- 
+		Grupo 4 - Graficos por Computadores
+				Estefania Lozano
+				Fausto Mora
+				Cesar Alvarado
+
+-->
+
 		<script src="js/libs/three.min.js"> </script>
 		<script src="js/libs/dat.gui.js"></script>
 		<script src="lib.js"></script>
@@ -21,7 +29,7 @@
 			var renderer = new THREE.WebGLRenderer();
 
 			//render
-			renderer.setClearColorHex(0xEEEEEE);
+			renderer.setClearColor(0xEEEEEE);
 			renderer.setSize(window.innerWidth, window.innerHeight);
 			document.body.appendChild(renderer.domElement);
 			renderer.shadowMapEnabled = true;
@@ -38,7 +46,7 @@
 			scene.add(plane);
 			
 			//se crea un cubo
-			var cubeGeom = new THREE.CubeGeometry(8, 8, 8);
+			var cubeGeom = new THREE.BoxGeometry(8, 8, 8);
 			var cubeMat = new THREE.MeshLambertMaterial({color: 0xFF0000});
 			var cube = new THREE.Mesh(cubeGeom, cubeMat);
 			cube.castShadow = true;
@@ -82,7 +90,17 @@
 			spotLight.castShadow = true;
 			scene.add(spotLight);
 			
-			
+			//   rojo  ,   verde ,   azul  , amarillo,  celest , morado  //
+						
+			var colores_codigo = { 
+				Rojo: 0xff0000, 
+				Verde: 0x00ff00, 
+				Azul: 0x0000ff, 
+				Amarillo: 0xffff00, 
+				Celeste: 0x00ffff, 
+				Morado:0xff00ff
+			};
+
 			//controles
 			var controls = new function() {
 				this.scaleCube = 0.5;
@@ -105,17 +123,22 @@
 				this.traslationPyrZ = 0.01;
 				this.traslationTorX = 0.01;
 				this.traslationTorZ = 0.01;
+				this.colorSphere = colores_codigo.Rojo;
+				this.colorCube = colores_codigo.Azul;
+				this.colorPyr = colores_codigo.Amarillo;
+				this.colorTor = colores_codigo.Verde;
 			}
 
 			var gui = new dat.GUI();
 			
-			//Se crearon carpetas para separar los controles de la esfera, cubo, piramide y toroide con el fin de mejorar la presentacion.
+			//se crean Folders para poder manejar los objetos en los controles
 			var Sphere = gui.addFolder('Sphere');
 			Sphere.add(controls, 'axisSelectSphe').options({'X Axis': 1, 'Y Axis': 2, 'Z Axis': 3});
 			Sphere.add(controls, 'rotationSpeedSphe',0,0.5);
 			Sphere.add(controls, 'scaleSphe',0.1,1);
 			Sphere.add(controls, 'traslationSpheX',0.1,10);
 			Sphere.add(controls, 'traslationSpheZ',0.1,10);
+			Sphere.add(controls, 'colorSphere',colores_codigo);
 
 			var Cube = gui.addFolder('Cube');
 			Cube.add(controls, 'axisSelectCube').options({'X Axis': 1, 'Y Axis': 2, 'Z Axis': 3});
@@ -123,6 +146,7 @@
 			Cube.add(controls, 'scaleCube', 0.1,2);
 			Cube.add(controls, 'traslationCubeX',0.1,15);
 			Cube.add(controls, 'traslationCubeZ',0.1,15);
+			Cube.add(controls, 'colorCube', colores_codigo);
 
 			var Toro = gui.addFolder('Toroid');
 			Toro.add(controls, 'axisSelectTor').options({'X Axis': 1, 'Y Axis': 2});
@@ -130,6 +154,7 @@
 			Toro.add(controls, 'scaleTor', 0.1,2);
 			Toro.add(controls, 'traslationTorX',0.1,10);
 			Toro.add(controls, 'traslationTorZ',0.1,10);
+			Toro.add(controls, 'colorTor',colores_codigo);
 
 			var Pyr = gui.addFolder('Pyramid');
 			Pyr.add(controls, 'axisSelectPyr').options({'X Axis': 1, 'Y Axis': 2, 'Z Axis': 3});
@@ -137,6 +162,7 @@
 			Pyr.add(controls, 'sacalePyr', 0.1,1.5);
 			Pyr.add(controls, 'traslationPyrX',0.1,15);
 			Pyr.add(controls, 'traslationPyrZ',0.1,15);
+			Pyr.add(controls, 'colorPyr',colores_codigo);
 			
 			//funcion render
 			var render =function() {
@@ -166,6 +192,11 @@
 				cube.position.z += controls.traslationCubeZ;
 
 
+				//cambiar color de cubo por controles
+				cube.material.color.setHex(controls.colorCube);
+
+
+
 				/// end cubo 
 
 
@@ -186,6 +217,9 @@
 				// posicion de mov de la esfera
 				sphere.position.x += controls.traslationSpheX;
 				sphere.position.z += controls.traslationSpheZ;
+
+				//cambiar color de esfera por controles
+				sphere.material.color.setHex(controls.colorSphere);
 
 				/// end esfera
 
@@ -218,6 +252,9 @@
 				pyr.position.x += controls.traslationPyrX;
 				pyr.position.z += controls.traslationPyrZ;
 
+				// cambiar color de piramide por controles
+				pyr.material.color.setHex(controls.colorPyr);
+
 				/// end esfera
 
 
@@ -241,6 +278,10 @@
 				// posicion de mov del toroide
 				toro.position.x += controls.traslationTorX;
 				toro.position.z += controls.traslationTorZ;
+
+
+				// cambiar color de toroide por controles
+				toro.material.color.setHex(controls.colorTor);
 
 
 				/// end toroide
