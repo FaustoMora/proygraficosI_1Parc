@@ -1,0 +1,4 @@
+Proyecto Gráficos de Computadora
+Presentación del Primer Parcial 
+Autores: Lozano Estefania, Mora Fausto & San Lucas Cesar
+Descripción: Crear un plano, y en el poner cuatro figuras geometricas. Realizarles cuatro operaciones: Rotar, Escalar, Trasladar y Cambiar de Color

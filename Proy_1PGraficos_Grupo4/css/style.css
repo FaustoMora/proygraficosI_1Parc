@@ -1,0 +1,16 @@
+#proyecto{
+	width:100%;background-color:#353535;color:white
+}
+
+.descripcion{
+	padding-top:10px;
+	padding-left:50px;
+	padding-bottom:5px;
+	font-size:20px
+}
+
+.autores{
+	padding-left:50px;
+	padding-bottom:5px;
+	font-size:16px
+}

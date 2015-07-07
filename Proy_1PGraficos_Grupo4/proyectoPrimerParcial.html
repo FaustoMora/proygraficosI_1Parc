@@ -1,0 +1,287 @@
+<html>
+	<head>
+		<title> Graficos por Computadora </title>
+		<style>
+			body { margin:0;}
+			canvas {
+				float: center;
+			}
+		</style>
+		<link rel="stylesheet" type="text/css" href="css/style.css" media="screen" />
+
+	</head>
+	<body>		
+		<div id="proyecto">
+				<font face="Cambria">
+					<div class="descripcion">Proyecto Gr&aacute;ficos por Computadora</div><bn>
+					<div class="autores"><b style="color:#f2ec85">Autores: </b>Lozano Estefan&iacute;a, Mora Fausto & San Lucas C&eacute;sar</div>
+				</font>
+		</div>
+
+		<script src="build/three.min.js"> </script>
+		<script src="js/controls/TrackballControls.js"></script>
+		<script src="js/controls/dat.gui.js"></script>
+
+		<script>	
+		var scene = new THREE.Scene();
+		var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+		var renderer = new THREE.WebGLRenderer();
+		//render	
+		//renderer.setClearColorHex(0xEEEEEE);
+		renderer.setSize(window.innerWidth, window.innerHeight-65);
+		renderer.shadowMapEnabled = true;
+		document.body.appendChild(renderer.domElement);
+
+		//Tablero
+		var cubeGeom = new THREE.CubeGeometry(70, 2,70);
+		var cubeMat = new THREE.MeshLambertMaterial({color: 0xe0e0e0});
+		var cube = new THREE.Mesh(cubeGeom, cubeMat);
+		cube.receiveShadow = true; //habilitamos que proyecte sombra
+		//cube.rotation.x=-0.5*Math.PI;
+		cube.position.x=0;
+		cube.position.y=0;
+		cube.position.z=0;
+		scene.add(cube);
+
+
+		//se crea un cubo
+		var cubeGeom = new THREE.CubeGeometry(10, 10, 10);
+		var cubeMat = new THREE.MeshLambertMaterial({color: 0xffe902});
+		var cube = new THREE.Mesh(cubeGeom, cubeMat);
+		cube.castShadow = true;
+		cube.position.y = 6;
+		scene.add(cube);
+
+		
+		//se cre la esfera
+		var sphereGeom = new THREE.SphereGeometry(6, 20, 20);
+		var sphereMat = new THREE.MeshLambertMaterial({color: 0x0000ff});
+		var sphere = new THREE.Mesh(sphereGeom, sphereMat);
+		sphere.castShadow = true;
+		sphere.position.y = 7;
+		scene.add(sphere);
+
+		
+
+		//se crea la piramide
+		var pyrGeom = new THREE.CylinderGeometry( 0, 8, 16, 4, 0);
+		var pyrMat = new THREE.MeshLambertMaterial({color: 0x00ff04});
+		var pyr = new THREE.Mesh(pyrGeom, pyrMat);
+		pyr.castShadow = true;
+		pyr.position.y = 9;
+		scene.add(pyr);
+		
+
+		//creacion de toroide
+		var toroGeom = new THREE.TorusGeometry(4, 2, 30, 50);
+		var toroMat = new THREE.MeshLambertMaterial({color: 0xff0000});
+		var toro = new THREE.Mesh(toroGeom, toroMat);
+		toro.castShadow = true;	
+		toro.position.y = 7;
+		scene.add(toro);
+			
+		//camara
+		camera.position.x=-70;
+		camera.position.y = 30;
+		camera.position.z = 30;
+		camera.lookAt(scene.position);
+
+		//luces
+		var ambientLight = new THREE.AmbientLight(0x0c0c0c);
+		scene.add(ambientLight);
+			
+		var spotLight = new THREE.SpotLight(0xffffff);
+		spotLight.position.set(-40, 120,-40);
+		spotLight.castShadow = true;
+		scene.add(spotLight);
+
+		var colores_codigo = { 
+				Rojo: 0xff0000, 
+				Verde: 0x00ff00, 
+				Azul: 0x0000ff, 
+				Amarillo: 0xffff00, 
+				Celeste: 0x00ffff, 
+				Morado:0xff00ff
+		};
+
+
+		//controles
+		var controls = new function() {
+				this.scaleCube = 1;
+				this.scalePyr = 1;
+				this.scaleTor = 1;
+				this.scaleSphe = 1;
+
+				this.axisSelectCube = 2;
+				this.axisSelectPyr = 2;
+				this.axisSelectTor = 1;
+				this.axisSelectSphe = 1;
+
+				this.rotationSpeedCube = 0.02;
+				this.rotationSpeedPyr = 0.02;
+				this.rotationSpeedTor = 0.02;
+				this.rotationSpeedSphe = 0.02;
+
+				this.traslationSpheX = -20;
+				this.traslationSpheZ = 20;
+
+				this.traslationCubeX = 20;
+				this.traslationCubeZ = 20;
+
+				this.traslationPyrX = -20;
+				this.traslationPyrZ = -20;
+
+				this.traslationTorX = 20;
+				this.traslationTorZ = -20;
+
+				this.colorSphere = 0x0000ff;
+				this.colorCube = 0xffe902;
+				this.colorPyr =  0x00ff04;
+				this.colorTor = 0xff0000;
+
+		}
+
+		//mouse tracking
+		mouseTrack = new THREE.TrackballControls(camera, renderer.domElement); //función que modifica la camara segun el movimiento del mouse
+		mouseTrack.rotateSpeed=1; //velocidad de rotacion de la cámara
+		mouseTrack.zoomSpeed=1; //velocidad de acercamiento/alejamiento de la camara
+		//mouseTrack.panSpeed=1.0; //velocidad de traslación de la camara
+		//mouseTrack.noZoom=false;
+		//mouseTrack.noPan=false;
+		mouseTrack.staticMoving=true;
+		mouseTrack.dynamicDampingFactor = 0.3;
+		
+		window.addEventListener('resize', onWindowResize, false); //evento que ajusta la ventana de visualización
+
+
+		var gui = new dat.GUI();
+
+		//Se crearon carpetas para separar los controles de la esfera, cubo, piramide y toroide con el fin de mejorar la presentacion.
+		var Sphere = gui.addFolder('Sphere');
+		//Sphere.add(controls, 'axisSelectSphe').options({'X Axis': 1, 'Y Axis': 2, 'Z Axis': 3});
+		Sphere.add(controls, 'rotationSpeedSphe',0,0.5);
+		Sphere.add(controls, 'scaleSphe',0.1,1);
+		Sphere.add(controls, 'traslationSpheX',-35,35);
+		Sphere.add(controls, 'traslationSpheZ',-35,35);
+		Sphere.add(controls, 'colorSphere',colores_codigo);
+
+		var Cube = gui.addFolder('Cube');
+		Cube.add(controls, 'axisSelectCube').options({'X Axis': 1, 'Y Axis': 2, 'Z Axis': 3});
+		Cube.add(controls, 'rotationSpeedCube',0,0.5);
+		Cube.add(controls, 'scaleCube', 0.1,2);
+		Cube.add(controls, 'traslationCubeX',-35,35);
+		Cube.add(controls, 'traslationCubeZ',-35,35);
+		Cube.add(controls, 'colorCube', colores_codigo);
+
+		var Toro = gui.addFolder('Toroid');
+		Toro.add(controls, 'axisSelectTor').options({'X Axis': 1, 'Y Axis': 2});
+		Toro.add(controls, 'rotationSpeedTor',0,0.5);
+		Toro.add(controls, 'scaleTor', 0.1,2);
+		Toro.add(controls, 'traslationTorX',-35,35);
+		Toro.add(controls, 'traslationTorZ',-35,35);
+		Toro.add(controls, 'colorTor',colores_codigo);
+
+		var Pyr = gui.addFolder('Pyramid');
+		Pyr.add(controls, 'axisSelectPyr').options({'X Axis': 1, 'Y Axis': 2, 'Z Axis': 3});
+		Pyr.add(controls, 'rotationSpeedPyr',0,0.5);
+		Pyr.add(controls, 'scalePyr', 0.1,1.5);
+		Pyr.add(controls, 'traslationPyrX',-35,35);
+		Pyr.add(controls, 'traslationPyrZ',-35,35);	
+		Pyr.add(controls, 'colorPyr',colores_codigo);
+
+		var render =function() {
+			//////     funciones de la esfera       ///////
+			// escalamiento de la esfera 
+			sphere.rotation.x += controls.rotationSpeedSphe;
+			sphere.scale.x = controls.scaleSphe;
+			sphere.scale.y = controls.scaleSphe;
+			sphere.scale.z = controls.scaleSphe;
+			// posicion de mov de la esfera
+			sphere.position.x = controls.traslationSpheX;
+			sphere.position.z = controls.traslationSpheZ;
+			//cambiar color de esfera por controles
+			sphere.material.color.setHex(controls.colorSphere);
+			/// end esfera
+
+
+			//////     funciones del cubo       ///////
+			//rotacion del cubo
+			if (controls.axisSelectCube == 1){
+				cube.rotation.x += controls.rotationSpeedCube;
+			} else if (controls.axisSelectCube == 2){
+				cube.rotation.y += controls.rotationSpeedCube;
+			} else if(controls.axisSelectCube == 3){
+				cube.rotation.z += controls.rotationSpeedCube;
+			}
+			// escalamiento del cubo
+			cube.scale.x = controls.scaleCube;
+			cube.scale.y = controls.scaleCube;
+			cube.scale.z = controls.scaleCube;
+			// posicion de mov del cubo
+			cube.position.x = controls.traslationCubeX;
+			cube.position.z = controls.traslationCubeZ;
+			//cambiar color del cubo
+			cube.material.color.setHex(controls.colorCube);
+			/// end cubo 
+
+			
+
+			//////     funciones de la piramide       ///////
+			// rotacion de la piramide
+			if (controls.axisSelectPyr == 1){
+				pyr.rotation.x += controls.rotationSpeedPyr;
+			} else if (controls.axisSelectPyr == 2){
+				pyr.rotation.y += controls.rotationSpeedPyr;
+			} else if(controls.axisSelectPyr == 3){
+				pyr.rotation.z += controls.rotationSpeedPyr;
+			}
+			// escalamiento de la piramide 
+			pyr.scale.x = controls.scalePyr;
+			pyr.scale.y = controls.scalePyr;
+			pyr.scale.z = controls.scalePyr;
+			// posicion de mov de la piramide
+			pyr.position.x = controls.traslationPyrX;
+			pyr.position.z = controls.traslationPyrZ;
+			// cambiar color de piramide por controles
+			pyr.material.color.setHex(controls.colorPyr);
+			/// end piramide
+
+			//////     funciones del toroide       ///////
+			// rotacion del toroide
+			if (controls.axisSelectTor == 1){
+				toro.rotation.x += controls.rotationSpeedTor*Math.PI;
+			} else if (controls.axisSelectTor == 2){
+				toro.rotation.y += controls.rotationSpeedTor*Math.PI;
+			} else if(controls.axisSelectTor == 3){
+				toro.rotation.z += controls.rotationSpeedTor*Math.PI;
+			}
+			// escalamiento de la piramide 
+			toro.scale.x = controls.scaleTor;
+			toro.scale.y = controls.scaleTor;
+			toro.scale.z = controls.scaleTor;
+			// posicion de mov del toroide
+			toro.position.x = controls.traslationTorX;
+			toro.position.z = controls.traslationTorZ;
+			// cambiar color de toroide por controles
+			toro.material.color.setHex(controls.colorTor);
+			/// end toroide
+
+			mouseTrack.update(); 
+			requestAnimationFrame(render);
+			renderer.render(scene, camera);
+		}
+
+		var onWindowResize=function(){
+				camera.aspect = window.innterWidth/window.innerHeight; //refresco el tamaño de la imagen
+				camera.updateProjectionMatrix(); //actualizo la matriz de proyeccion de la camara
+				renderer.setSize(window.innerWidth, window.innerHeight); 
+				mouseTrack.handleResize(); 
+				render();
+			}
+
+		render();
+
+		</script>
+	</body>
+
+</html>
